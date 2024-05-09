@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import CannonDebugger from "cannon-es-debugger";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import Stadium from "./objects/Stadium";
+import Football from "./objects/Football";
 
 // Add scene
 const scene = new THREE.Scene();
@@ -27,49 +28,32 @@ const world = new CANNON.World({
   gravity: new CANNON.Vec3(0, -9.82, 0),
 });
 
-// CREATE SURFACE / GROUND
-const groundBody = new CANNON.Body({
-  mass: 0, // if any object falls on this it remains static (i.e. it doesn't move)
-  material: new CANNON.Material("ground"),
-  shape: new CANNON.Plane(),
-});
-groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-world.addBody(groundBody);
-
-// CREATE SPHERE
-const sphereBody = new CANNON.Body({
-  mass: 5,
-  shape: new CANNON.Sphere(0.5),
-  material: new CANNON.Material(),
-  position: new CANNON.Vec3(0, 10, 0)
-});
-world.addBody(sphereBody);
-
-// ADDING GLTF LOADER FOR STADIUM
 const gltfLoader = new GLTFLoader();
-gltfLoader.load('stadium/scene.gltf',(gltf)=>{
-    scene.add(gltf.scene)
-})
+
+Stadium.create(scene, world, gltfLoader);
+Football.create(scene, world, gltfLoader);
 
 // ADDING AMBIENT LIGHT (lights up everything)
-const ambientLight = new THREE.AmbientLight(0xffffff,1)
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
 // ADDING DIRECTIONAL LIGHT (works as sunlight)
-const directionalLight = new THREE.DirectionalLight(0xffffff,5)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
 scene.add(directionalLight);
 
 // ADDING POINTLIGHT
 
-const controls = new OrbitControls(camera, renderer.domElement);
+// const controls = new OrbitControls(camera, renderer.domElement);
 const cannonDebugger = new CannonDebugger(scene, world);
 
 camera.position.set(5, 5, 5);
 
 const animate = () => {
   requestAnimationFrame(animate);
+  Football.animate(camera);
+
   world.fixedStep();
-  controls.update();
+  // controls.update();
   cannonDebugger.update();
   renderer.render(scene, camera);
 };
