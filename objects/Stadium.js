@@ -13,7 +13,7 @@ function create(scene, world, loader) {
   world.addBody(groundBody);
 
   // ADDING GLTF LOADER FOR STADIUM
-  loader.load("stadium/scene.gltf", (gltf) => {
+  loader.load("stadium/scene.json", (gltf) => {
     const stadium = gltf.scene;
     const scale = 2;
     stadium.scale.set(scale, scale, scale);
