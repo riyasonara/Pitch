@@ -25,67 +25,6 @@ function create(scene, world, loader) {
     football.scale.set(scale, scale, scale);
     scene.add(football);
   });
-
-  // Create boundaries
-  const groundMaterial = new CANNON.Material("groundMaterial");
-
-  // Create ground plane
-  const groundBody = new CANNON.Body({
-    mass: 0,
-    shape: new CANNON.Plane(),
-    material: groundMaterial,
-  });
-  groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-  world.addBody(groundBody);
-
-  // Create boundary walls
-  const wallThickness = 1;
-  const wallHeight = 10;
-  const wallLength = 50;
-
-  // Front wall
-  const frontWall = new CANNON.Body({
-    mass: 0,
-    shape: new CANNON.Box(
-      new CANNON.Vec3(wallLength, wallHeight, wallThickness)
-    ),
-    material: groundMaterial,
-  });
-  frontWall.position.set(0, wallHeight / 2, -wallLength);
-  world.addBody(frontWall);
-
-  // Back wall
-  const backWall = new CANNON.Body({
-    mass: 0,
-    shape: new CANNON.Box(
-      new CANNON.Vec3(wallLength, wallHeight, wallThickness)
-    ),
-    material: groundMaterial,
-  });
-  backWall.position.set(0, wallHeight / 2, wallLength);
-  world.addBody(backWall);
-
-  // Left wall
-  const leftWall = new CANNON.Body({
-    mass: 0,
-    shape: new CANNON.Box(
-      new CANNON.Vec3(wallThickness, wallHeight, wallLength)
-    ),
-    material: groundMaterial,
-  });
-  leftWall.position.set(-wallLength, wallHeight / 2, 0);
-  world.addBody(leftWall);
-
-  // Right wall
-  const rightWall = new CANNON.Body({
-    mass: 0,
-    shape: new CANNON.Box(
-      new CANNON.Vec3(wallThickness, wallHeight, wallLength)
-    ),
-    material: groundMaterial,
-  });
-  rightWall.position.set(wallLength, wallHeight / 2, 0);
-  world.addBody(rightWall);
 }
 
 const cameraOffset = new THREE.Vector3(0, 0.5, 1.2);
