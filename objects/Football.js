@@ -1,8 +1,12 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 
 let sphereBody;
 let football;
+let goalkick;
+let mixer;
+let clock = new THREE.Clock();
 
 function create(scene, world, loader) {
   // CREATE SPHERE
@@ -25,11 +29,27 @@ function create(scene, world, loader) {
     football.scale.set(scale, scale, scale);
     scene.add(football);
   });
+
+  // ADDING FBX LOADER FOR GOALKICK
+  const fbxLoader = new FBXLoader();
+  fbxLoader.load("goalkick/GoalkeeperDropKick.json", (fbx) => {
+    goalkick = fbx;
+    const scale = 3;
+    goalkick.scale.set(scale, scale, scale);
+    scene.add(goalkick);
+
+    // Setup animation mixer
+    mixer = new THREE.AnimationMixer(goalkick);
+    const action = mixer.clipAction(fbx.animations[0]);
+    action.play();
+  });
 }
 
 const cameraOffset = new THREE.Vector3(0, 0.5, 1.2);
 
 function animate(camera) {
+  const delta = clock.getDelta();
+  if (mixer) mixer.update(delta);
   if (football) {
     football.position.copy(sphereBody.position);
     football.quaternion.copy(sphereBody.quaternion);
